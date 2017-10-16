@@ -1,47 +1,106 @@
 require 'rails_helper'
-require 'game'
-
-describe Game do
-
-  context 'describing the type' do
-    subject(:game){described_class.new}
-
-    it 'has a secret_word property' do
-      expect(game.secret_word).to be_nil
-    end
-
-    it 'has a guesses property' do
-      expect(game.guesses).to be_nil
-    end
-  end
-
-end
 
 describe Game do
 
   let(:secret_word){'hello'}
-  let(:guesses){''}
+  let(:guesses){[]}
 
   subject(:game) {described_class.new(secret_word: secret_word, guesses: guesses)}
 
   context 'when all letters have been guessed correctly' do
-    let(:guesses){'hello'}
+    let(:guesses){[Guess.new(value: 'h'), Guess.new(value: 'e'), Guess.new(value: 'l'), Guess.new(value: 'o')]}
     it 'is won' do
-      expect(game.won?).to be true
+      expect(subject.won?).to be true
     end
   end
 
   context 'when the player does not have lives remaining' do
-    let(:guesses){'abcdfgjkmn'}
+    let(:guesses){[Guess.new(value: 'a'), Guess.new(value: 'b'), Guess.new(value: 'c'), Guess.new(value: 'd'), Guess.new(value: 'f'), Guess.new(value: 'g'), Guess.new(value: 'j'), Guess.new(value: 'k'), Guess.new(value: 'm'), Guess.new(value: 'n')]}
     it 'is lost' do
-      expect(game.lost?).to be false
+      expect(subject.lost?).to be true
     end
   end
 
-  context 'when some characters have been guessed' do
-    let(:guesses){'l'}
-    it 'shows the right hint' do
-      expect(game.hint).to eq('__ll_')
+  context 'when one correct character has been guessed' do
+    let(:guesses){[Guess.new(value: 'l')]}
+    it 'generates a hint with the guessed character' do
+      expect(subject.hint).to eq([nil,nil,'l','l',nil])
+    end
+  end
+
+  context 'when only an incorrect character has been guessed' do
+    let(:guesses){[Guess.new(value: 'a')]}
+    it 'generates a blank hint' do
+      expect(subject.hint).to eq([nil,nil,nil,nil,nil])
+    end
+  end
+
+  context 'when a correct guess is made' do
+
+    before do
+      subject.guess!('e')
+    end
+
+    it 'adds a guess with the correct value to the game state' do
+      expect(subject.guesses.first.value).to eq('e')
+    end
+
+    it 'does not add multiple guesses to the game state' do
+      expect(subject.guesses.length).to eq(1)
+    end
+
+    it 'does not cause a life to be lost' do
+      expect(subject.lives_remaining).to eq(10)
+    end
+
+  end
+
+  context 'when an incorrect guess is made' do
+    before do
+      subject.guess!('a')
+    end
+
+    it 'adds the guess to the game state' do
+      expect(subject.guesses.first.value).to eq('a')
+    end
+
+    it 'causes a life to be lost' do
+      expect(subject.lives_remaining).to eq(9)
+    end
+
+  end
+
+  context 'when guessing a character which has already been guessed' do
+    let(:guesses){[Guess.new(value: 'a')]}
+    before do
+      subject.guess!('a')
+    end
+
+    it 'does not cause a life to be lost' do
+      expect(subject.lives_remaining).to eq(9)
+    end
+
+    it 'does not add a duplicate letter to the guesses' do
+      expect(game.guesses.first.value).to eq('a')
+    end
+  end
+
+  context 'when a guess is correct' do
+    it 'is identified as such' do
+      expect(subject.guess_fitness('h')).to eq(:correct)
+    end
+  end
+
+  context 'when a guess is incorrect' do
+    it 'is identified as such' do
+      expect(subject.guess_fitness('a')).to eq(:incorrect)
+    end
+  end
+
+  context 'when a guess has already been made' do
+    let(:guesses){[Guess.new(value: 'h')]}
+    it 'is identified as such' do
+      expect(subject.guess_fitness('h')).to eq(:already_guessed)
     end
   end
 
