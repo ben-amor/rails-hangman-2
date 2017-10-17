@@ -1,10 +1,11 @@
 class Game < ApplicationRecord
-  has_many :guesses
+  has_many :guesses, :autosave => true
   validates :secret_word, presence: true
 
   :correct
   :incorrect
   :already_guessed
+  :not_a_character
 
   TURNS_ALLOWED = 10
   private_constant :TURNS_ALLOWED
@@ -21,13 +22,16 @@ class Game < ApplicationRecord
     TURNS_ALLOWED - (guess_characters - secret_word_characters).length
   end
 
-  def hint
+  def hint_characters
     secret_word_characters.map { |char| char if (guess_characters.include?(char)) }
   end
 
+  # TODO this relates to guesses, not games, and could move out?
   def guess_fitness(guessed_character)
     case
-    when guess_characters.include?(guessed_character)
+    when !/[A-Za-z]/.match(guessed_character)
+        :not_a_character
+      when guess_characters.include?(guessed_character)
         :already_guessed
       when secret_word_characters.include?(guessed_character)
         :correct
@@ -36,21 +40,19 @@ class Game < ApplicationRecord
     end
   end
 
-  def guess!(guessed_character)
-    return if guess_fitness(guessed_character) == :already_guessed
+  def affects_game_state?(guess_fitness_result)
+    (guess_fitness_result == :correct || guess_fitness_result == :incorrect)
+  end
 
-    guesses << Guess.create(value: guessed_character)
 
+  def guess_characters
+    guesses.map {|g| g.value}
   end
 
   private
 
   def secret_word_characters
     secret_word.split('')
-  end
-
-  def guess_characters
-    guesses.map {|g| g.value} # TODO this should be .pluck(:value) - pluck may only work for records which have previoulsy been saved
   end
 
 end

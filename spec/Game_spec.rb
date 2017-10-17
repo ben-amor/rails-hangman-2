@@ -24,21 +24,21 @@ describe Game do
   context 'when one correct character has been guessed' do
     let(:guesses){[Guess.new(value: 'l')]}
     it 'generates a hint with the guessed character' do
-      expect(subject.hint).to eq([nil,nil,'l','l',nil])
+      expect(subject.hint_characters).to eq([nil,nil,'l','l',nil])
     end
   end
 
   context 'when only an incorrect character has been guessed' do
     let(:guesses){[Guess.new(value: 'a')]}
     it 'generates a blank hint' do
-      expect(subject.hint).to eq([nil,nil,nil,nil,nil])
+      expect(subject.hint_characters).to eq([nil,nil,nil,nil,nil])
     end
   end
 
   context 'when a correct guess is made' do
 
     before do
-      subject.guess!('e')
+      subject.guesses << Guess.new(value: 'e')
     end
 
     it 'adds a guess with the correct value to the game state' do
@@ -57,7 +57,7 @@ describe Game do
 
   context 'when an incorrect guess is made' do
     before do
-      subject.guess!('a')
+      subject.guesses << Guess.new(value: 'a')
     end
 
     it 'adds the guess to the game state' do
@@ -68,21 +68,6 @@ describe Game do
       expect(subject.lives_remaining).to eq(9)
     end
 
-  end
-
-  context 'when guessing a character which has already been guessed' do
-    let(:guesses){[Guess.new(value: 'a')]}
-    before do
-      subject.guess!('a')
-    end
-
-    it 'does not cause a life to be lost' do
-      expect(subject.lives_remaining).to eq(9)
-    end
-
-    it 'does not add a duplicate letter to the guesses' do
-      expect(game.guesses.first.value).to eq('a')
-    end
   end
 
   context 'when a guess is correct' do

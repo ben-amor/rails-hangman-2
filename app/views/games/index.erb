@@ -1,0 +1,3 @@
+<% @games.each do |game| %>
+<p><%= link_to "Game #{game.id}, #{create_hint_for_screen(game.hint_characters)}", [:edit, game] %></p>
+<% end %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171012214812) do
+ActiveRecord::Schema.define(version: 20171016211536) do
 
   create_table "games", force: :cascade do |t|
     t.string "secret_word"
@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 20171012214812) do
 
   create_table "guesses", force: :cascade do |t|
     t.string "value"
+    t.integer "game_id"
   end
 
 end

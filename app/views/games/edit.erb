@@ -1,0 +1,21 @@
+<p>Characters guessed correctly so far: <%= create_hint_for_screen(@game.hint_characters)%></p>
+<p>All the characters you have guessed so far, pleasingly ordered: <%= all_guesses_alphabetically_ordered_as_string(@game.guess_characters)%></p>
+<p>Lives remaining: <%= @game.lives_remaining%>
+
+  <% if @guess_fitness_result then %>
+    <p><%= message_about_last_guess(@guess_fitness_result) %></p>
+  <% end %>
+
+<%= form_tag({:controller=>"games", :action=>"edit"}, method: :post) do %>
+  <% if @game.won? then %>
+    You won
+  <% elsif @game.lost? then %>
+    You lost
+  <% else %>
+    <%= text_field_tag :guess_character %>
+    <%= submit_tag 'Guess', name: nil %>
+  <% end %>
+<% end %>
+
+<p><%= link_to "List of games", games_path %></p>
+<p><%= link_to "New game", new_game_path %></p>
