@@ -10,6 +10,7 @@ class GamesController < ActionController::Base
   def create
     game = Game.create(secret_word: GenerateRandomWord.new.call)
     game.save
+    redirect_to edit_game_path(game)
   end
 
   def edit
