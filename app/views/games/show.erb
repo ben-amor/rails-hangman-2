@@ -2,11 +2,16 @@
 <p>All the characters you have guessed so far, pleasingly ordered: <%= all_guesses_alphabetically_ordered_as_string(@game.guess_characters)%></p>
 <p>Lives remaining: <%= @game.lives_remaining%>
 
-  <% if @guess_fitness_result then %>
-    <p><%= message_about_last_guess(@guess_fitness_result) %></p>
+  if validation failed
+    error message
+  end if
+
+  <% #TODO make it more obvious that this means 'user came from the list page' %>
+  <% if @guess_correct != nil  %>
+    <p><%= message_about_last_guess(@guess_correct) %></p>
   <% end %>
 
-<%= form_tag({:controller=>"games", :action=>"edit"}, method: :post) do %>
+<%= form_tag({:controller=>"games", :action=>"update"}, method: :patch) do %>
   <% if @game.won? then %>
     You won
   <% elsif @game.lost? then %>

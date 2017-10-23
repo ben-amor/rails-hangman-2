@@ -1,5 +1,5 @@
 class GenerateRandomWord
   def call
-    "potato"
+    "potato" #Here is where gem that makes random words goes
   end
 end

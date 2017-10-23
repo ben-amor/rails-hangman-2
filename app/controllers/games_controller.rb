@@ -7,24 +7,25 @@ class GamesController < ActionController::Base
   def new
   end
 
-  def create
-    game = Game.create(secret_word: GenerateRandomWord.new.call)
-    game.save
-    redirect_to edit_game_path(game)
+  def show
+    @game = Game.find(params[:id])
   end
 
-  def edit
+  def create
+    game = Game.create(secret_word: GenerateRandomWord.new.call)
+    game.save!
+    redirect_to game
+  end
+
+  def update
     @game = Game.find(params[:id])
     guess_character = params[:guess_character]
 
-    if request.post? then
-      @guess_fitness_result = @game.guess_fitness(guess_character)
-      if(@game.affects_game_state?(@guess_fitness_result)) then
-        guess = Guess.create(value: guess_character)
-        @game.guesses << guess
-        @game.save
-      end
+    if !@game.guesses.create(value: guess_character)
+      # TODO display validation failure message of Guess
     end
+
+    render :show
   end
 
 end

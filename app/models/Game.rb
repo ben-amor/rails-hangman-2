@@ -1,11 +1,6 @@
 class Game < ApplicationRecord
-  has_many :guesses, :autosave => true
+  has_many :guesses#, :autosave => true # CHECK saves guesses when game is saved? TODO cascading delete game->guesses
   validates :secret_word, presence: true
-
-  :correct
-  :incorrect
-  :already_guessed
-  :not_a_character
 
   TURNS_ALLOWED = 10
   private_constant :TURNS_ALLOWED
@@ -26,24 +21,9 @@ class Game < ApplicationRecord
     secret_word_characters.map { |char| char if (guess_characters.include?(char)) }
   end
 
-  # TODO this relates to guesses, not games, and could move out?
-  def guess_fitness(guessed_character)
-    case
-    when !/[A-Za-z]/.match(guessed_character)
-        :not_a_character
-      when guess_characters.include?(guessed_character)
-        :already_guessed
-      when secret_word_characters.include?(guessed_character)
-        :correct
-      else
-        :incorrect
-    end
+  def correct_guess?(guessed_character)
+   secret_word_characters.include?(guessed_character)
   end
-
-  def affects_game_state?(guess_fitness_result)
-    (guess_fitness_result == :correct || guess_fitness_result == :incorrect)
-  end
-
 
   def guess_characters
     guesses.map {|g| g.value}
