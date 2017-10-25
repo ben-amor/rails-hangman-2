@@ -1,0 +1,11 @@
+<% if @guess && @guess.errors && @guess.errors.size > 0 %>
+  <% @guess.errors.each do |attr, msg| %>
+  <p class="error"><%= "#{attr} #{msg}" %></p>
+  <% end %>
+<% end if %>
+
+<%= form_tag({:controller=>"guesses", :action=>"create"}, method: :post) do %>
+  <%= text_field_tag :guess_character %>
+  <%= hidden_field_tag :game_id, game_id %>
+  <%= submit_tag 'Guess', name: nil %>
+<% end %>

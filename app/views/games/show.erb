@@ -1,26 +1,20 @@
+<%= stylesheet_link_tag 'application' %>
 <p>Characters guessed correctly so far: <%= create_hint_for_screen(@game.hint_characters)%></p>
 <p>All the characters you have guessed so far, pleasingly ordered: <%= all_guesses_alphabetically_ordered_as_string(@game.guess_characters)%></p>
 <p>Lives remaining: <%= @game.lives_remaining%>
-
-  if validation failed
-    error message
-  end if
 
   <% #TODO make it more obvious that this means 'user came from the list page' %>
   <% if @guess_correct != nil  %>
     <p><%= message_about_last_guess(@guess_correct) %></p>
   <% end %>
 
-<%= form_tag({:controller=>"games", :action=>"update"}, method: :patch) do %>
-  <% if @game.won? then %>
+  <% if @game.won? %>
     You won
-  <% elsif @game.lost? then %>
+  <% elsif @game.lost? %>
     You lost
   <% else %>
-    <%= text_field_tag :guess_character %>
-    <%= submit_tag 'Guess', name: nil %>
+    <%= render partial: "guesses/new", locals: {game_id: @game.id} %>
   <% end %>
-<% end %>
 
 <p><%= link_to "List of games", games_path %></p>
 <p><%= link_to "New game", new_game_path %></p>
