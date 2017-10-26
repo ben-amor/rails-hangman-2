@@ -72,20 +72,13 @@ describe Game do
 
   context 'when a guess is correct' do
     it 'is identified as such' do
-      expect(subject.guess_fitness('h')).to eq(:correct)
+      expect(subject.correct_guess?('h')).to be true
     end
   end
 
   context 'when a guess is incorrect' do
     it 'is identified as such' do
-      expect(subject.guess_fitness('a')).to eq(:incorrect)
-    end
-  end
-
-  context 'when a guess has already been made' do
-    let(:guesses){[Guess.new(value: 'h')]}
-    it 'is identified as such' do
-      expect(subject.guess_fitness('h')).to eq(:already_guessed)
+      expect(subject.correct_guess?('a')).to be false
     end
   end
 
