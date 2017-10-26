@@ -13,7 +13,7 @@
 ActiveRecord::Schema.define(version: 20171016211536) do
 
   create_table "games", force: :cascade do |t|
-    t.string "secret_word"
+    t.string "secret_word" # TODO write migrations to make these columns not null
   end
 
   create_table "guesses", force: :cascade do |t|

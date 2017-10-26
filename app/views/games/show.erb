@@ -4,16 +4,18 @@
 <p>Lives remaining: <%= @game.lives_remaining%>
 
   <% #TODO make it more obvious that this means 'user came from the list page' %>
-  <% if @guess_correct != nil  %>
-    <p><%= message_about_last_guess(@guess_correct) %></p>
+  <% #TODO move this to a helper? %>
+  <% guess_correct = @game.correct_guess?(@game.most_recent_guess_value) %>
+  <% if guess_correct != nil  %>
+    <p><%= message_about_last_guess(guess_correct) %></p>
   <% end %>
 
-  <% if @game.won? %>
-    You won
-  <% elsif @game.lost? %>
-    You lost
-  <% else %>
+  <% if @game.in_progress? %>
     <%= render partial: "guesses/new", locals: {game_id: @game.id} %>
+  <% else %>
+    <p>
+     <%= won_or_lost_message(@game) %>
+    </p>
   <% end %>
 
 <p><%= link_to "List of games", games_path %></p>

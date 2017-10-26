@@ -1,17 +1,19 @@
 class GuessesController < ActionController::Base
   def create
-    game_id = params[:game_id]
-    guess_character = params[:guess_character]
+    game = Game.find(params[:game_id])
 
-    @game = Game.find(game_id)
+    game.guesses.create(guess_params)
 
-    @guess = @game.guesses.create(value: guess_character)
-    @guess_correct = @game.correct_guess?(guess_character)
-
-    render "games/show", :id => game_id
+    redirect_to game
 
   end
 
   def new
+  end
+
+  private
+
+  def guess_params
+    params.require(:guess).permit(:value)
   end
 end

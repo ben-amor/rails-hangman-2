@@ -1,9 +1,17 @@
 class Game < ApplicationRecord
-  has_many :guesses#, :autosave => true # CHECK saves guesses when game is saved? TODO cascading delete game->guesses
+  has_many :guesses
   validates :secret_word, presence: true
 
   TURNS_ALLOWED = 10
   private_constant :TURNS_ALLOWED
+
+  def in_progress?
+    !won? && !lost?
+  end
+
+  def most_recent_guess_value
+    guesses.max_by { |id| id }.value
+  end
 
   def won?
     (secret_word_characters - guess_characters).empty?
