@@ -1,7 +1,5 @@
-<% # get errors from flash if @guess&.errors %>
-  <% @guess.errors.each do |attr, msg| %>
-    <p class="error"><%= "#{attr} #{msg}" %></p>
-  <% end %>
+<% if flash[:errors] %>
+  <p class="error"><%= flash[:errors] %></p>
 <% end %>
 
 <%= form_for([@game, @game.guesses.build]) do |f| %>

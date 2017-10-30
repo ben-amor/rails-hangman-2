@@ -22,6 +22,6 @@ module GameHelper
   private
 
   def correct_or_incorrect(game)
-    game.most_recent_guess.correct(game.secret_word) ? 'Correct' : 'Incorrect'
+    game.most_recent_guess.correct?(game.secret_word) ? 'Correct' : 'Incorrect'
   end
 end
