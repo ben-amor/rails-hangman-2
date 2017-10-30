@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171016211536) do
+ActiveRecord::Schema.define(version: 20171030211454) do
 
   create_table "games", force: :cascade do |t|
-    t.string "secret_word" # TODO write migrations to make these columns not null
+    t.string "secret_word", null: false
   end
 
   create_table "guesses", force: :cascade do |t|
-    t.string "value"
+    t.string "value", null: false
     t.integer "game_id"
   end
 

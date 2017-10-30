@@ -8,6 +8,6 @@ class Guess < ApplicationRecord
             uniqueness: { scope: :game_id, message: 'has already been guessed' }
 
   def correct?(list_of_characters)
-    list_of_characters.include?(guessed_character)
+    list_of_characters.include?(value)
   end
 end

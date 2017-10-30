@@ -27,11 +27,11 @@ class Game < ApplicationRecord
   end
 
   def hint_characters
-    secret_word_characters.map { |c| c if guess_characters.include?(char) }
+    secret_word_characters.map { |c| c if guess_characters.include?(c) }
   end
 
   def guess_characters
-    guesses.pluck(:value)
+    guesses.map(&:value) # TODO .pluck causes my specs to fail
   end
 
   private
