@@ -1,4 +1,4 @@
-<% if @guess&.errors %>
+<% # get errors from flash if @guess&.errors %>
   <% @guess.errors.each do |attr, msg| %>
     <p class="error"><%= "#{attr} #{msg}" %></p>
   <% end %>

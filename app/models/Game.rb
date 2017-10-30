@@ -9,9 +9,9 @@ class Game < ApplicationRecord
     !won? && !lost?
   end
 
-  def most_recent_guess_value
-    return nil if !guesses.any?
-    guesses.max_by { |id| id }.value
+  def most_recent_guess
+    return nil if guesses.none?
+    guesses.last
   end
 
   def won?
@@ -19,7 +19,7 @@ class Game < ApplicationRecord
   end
 
   def lost?
-     lives_remaining <= 0
+    lives_remaining <= 0
   end
 
   def lives_remaining
@@ -27,15 +27,11 @@ class Game < ApplicationRecord
   end
 
   def hint_characters
-    secret_word_characters.map { |char| char if (guess_characters.include?(char)) }
-  end
-
-  def correct_guess?(guessed_character)
-   secret_word_characters.include?(guessed_character)
+    secret_word_characters.map { |c| c if guess_characters.include?(char) }
   end
 
   def guess_characters
-    guesses.map {|g| g.value}
+    guesses.pluck(:value)
   end
 
   private
@@ -43,5 +39,4 @@ class Game < ApplicationRecord
   def secret_word_characters
     secret_word.split('')
   end
-
 end

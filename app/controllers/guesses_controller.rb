@@ -1,14 +1,14 @@
+# Controller for Guesses
 class GuessesController < ActionController::Base
   def create
     game = Game.find(params[:game_id])
 
-    game.guesses.create(guess_params)
+    guess = game.guesses.create(guess_params)
+
+    unless guess.valid? flash[:errors] = guess.errors.full_messages.to_sentence
+    end
 
     redirect_to game
-
-  end
-
-  def new
   end
 
   private

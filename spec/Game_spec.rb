@@ -5,38 +5,43 @@ describe Game do
   let(:secret_word){'hello'}
   let(:guesses){[]}
 
-  subject(:game) {described_class.new(secret_word: secret_word, guesses: guesses)}
+  subject(:game) { described_class.new(secret_word: secret_word, guesses: guesses) }
 
   context 'when all letters have been guessed correctly' do
+    #TODO write a helper method to build guesses
+    before do
+      game.guesses.create(value: 'h')
+
+    end
+
     let(:guesses){[Guess.new(value: 'h'), Guess.new(value: 'e'), Guess.new(value: 'l'), Guess.new(value: 'o')]}
     it 'is won' do
-      expect(subject.won?).to be true
+      expect(game).to be_won
     end
   end
 
   context 'when the player does not have lives remaining' do
-    let(:guesses){[Guess.new(value: 'a'), Guess.new(value: 'b'), Guess.new(value: 'c'), Guess.new(value: 'd'), Guess.new(value: 'f'), Guess.new(value: 'g'), Guess.new(value: 'j'), Guess.new(value: 'k'), Guess.new(value: 'm'), Guess.new(value: 'n')]}
+    let(:guesses) { [Guess.new(value: 'a'), Guess.new(value: 'b'), Guess.new(value: 'c'), Guess.new(value: 'd'), Guess.new(value: 'f'), Guess.new(value: 'g'), Guess.new(value: 'j'), Guess.new(value: 'k'), Guess.new(value: 'm'), Guess.new(value: 'n')] }
     it 'is lost' do
-      expect(subject.lost?).to be true
+      expect(game).to be_lost
     end
   end
 
   context 'when one correct character has been guessed' do
-    let(:guesses){[Guess.new(value: 'l')]}
+    let(:guesses) { [Guess.new(value: 'l')] }
     it 'generates a hint with the guessed character' do
       expect(subject.hint_characters).to eq([nil,nil,'l','l',nil])
     end
   end
 
   context 'when only an incorrect character has been guessed' do
-    let(:guesses){[Guess.new(value: 'a')]}
+    let(:guesses) { [Guess.new(value: 'a')] }
     it 'generates a blank hint' do
       expect(subject.hint_characters).to eq([nil,nil,nil,nil,nil])
     end
   end
 
   context 'when a correct guess is made' do
-
     before do
       subject.guesses << Guess.new(value: 'e')
     end
