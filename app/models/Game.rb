@@ -37,6 +37,6 @@ class Game < ApplicationRecord
   private
 
   def secret_word_characters
-    secret_word.split('')
+    secret_word.chars
   end
 end
