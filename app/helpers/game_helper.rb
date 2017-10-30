@@ -7,8 +7,9 @@ module GameHelper
     guess_characters.sort.join(', ')
   end
 
-  def message_about_last_guess(correct_guess)
-    correct_guess ? "Correct" : "Incorrect"
+  def message_about_last_guess(game)
+    return "" if game.most_recent_guess_value == nil
+    "Last guess: #{game.correct_guess?(game.most_recent_guess_value) ? 'Correct' : 'Incorrect'}"
   end
 
   def won_or_lost_message(game)

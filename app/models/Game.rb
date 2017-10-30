@@ -10,6 +10,7 @@ class Game < ApplicationRecord
   end
 
   def most_recent_guess_value
+    return nil if !guesses.any?
     guesses.max_by { |id| id }.value
   end
 
